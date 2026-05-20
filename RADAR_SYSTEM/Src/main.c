@@ -147,21 +147,20 @@ USART1_init();
 
  GPIOB_BSRR =(1<<1); //buzzer is active low so keep off at start.
 
- USART_string("Initiating radar system\r\n");
 
     while(1) {
 
 
-    	for(uint16_t Capture_val=1000; Capture_val<2000; Capture_val++)
+    	for(uint16_t Capture_val=1000; Capture_val<2000; Capture_val+=10)
     	{
     		    TIM2_CCR1=Capture_val;
-    		    delay_us(1000);
+    		    delay_us(15000);
 
     		    GPIOB_BSRR = (1<<0);
     		        	delay_us(10);
     		        	GPIOB_BSRR = (1<<(0+16));
 
-    		        	TIM3_CNT=0;
+
     		        	while((GPIOA_IDR & (1<<6))==0)
     		        	  {
     		        		if(TIM3_CNT > 30000) break;
@@ -173,15 +172,16 @@ USART1_init();
     		        	}
     		        	uint16_t Echo_pulse= TIM3_CNT;
     		        	uint16_t Distance = Echo_pulse /58;
-
-    		        	USART_string("Distance:");
-    		        	Distance_TX(Distance);
-    		        	USART_string(" cm\r\n");
+    		            uint16_t Angle = ((Capture_val -1000) *180)/1000;
+    		        	Distance_TX(Angle);
+						USART_TX(',');
+						Distance_TX(Distance);
+						USART_string("\r\n");
 
     		            if(Distance>2 && Distance<=60)
     		            {
     		            	GPIOB_BSRR =(1<<(1+16));
-    		            	USART_string("Object Detected!\r\n");
+
     		            }
     		            else
     		            {
@@ -191,16 +191,16 @@ USART1_init();
     	}
 
 
-    	for(int16_t Capture_val=2000; Capture_val>=1000; Capture_val--)
+    	for(int16_t Capture_val=2000; Capture_val>=1000; Capture_val-=10)
     	    	{
     	    		    TIM2_CCR1=Capture_val;
-    	    		    delay_us(1000);
+    	    		    delay_us(15000);
 
     	    		    GPIOB_BSRR = (1<<0);
     	    		        	delay_us(10);
     	    		        	GPIOB_BSRR = (1<<(0+16));
 
-    	    		        	TIM3_CNT=0;
+
     	    		        	while((GPIOA_IDR & (1<<6))==0)
     	    		        	{
     	    		        		if(TIM3_CNT > 30000) break;
@@ -212,15 +212,16 @@ USART1_init();
     	    		        	}
     	    		        	uint16_t Echo_pulse= TIM3_CNT;
     	    		        	uint16_t Distance = Echo_pulse /58;
-
-    	    		        	USART_string("Distance:");
+                                uint16_t Angle = ((Capture_val -1000) *180)/1000;
+    	    		        	Distance_TX(Angle);
+    	    		        	USART_TX(',');
     	    		        	Distance_TX(Distance);
-    	    		        	USART_string(" cm\r\n");
+    	    		        	USART_string("\r\n");
 
     	    		            if(Distance>2 && Distance<=60)
     	    		            {
     	    		            	GPIOB_BSRR =(1<<(1+16));
-    	    		            	USART_string("Object Detected!\r\n");
+
     	    		            }
     	    		            else
     	    		            {
