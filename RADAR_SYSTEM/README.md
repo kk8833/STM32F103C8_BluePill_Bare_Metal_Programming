@@ -76,6 +76,9 @@ Distance (cm) = Echo_pulse_us / 58
 - If distance outside range → Buzzer OFF
 - Buzzer is active low — PB1 LOW turns it ON, PB1 HIGH turns it OFF
 
+## The Radar GUI
+The radar visualization is implemented using a Processing script that receives real-time angle and distance data from the STM32F103C8T6 system through serial communication via the CP2102 module. The interface visually displays the scanning sweep, detected object range, and angle in a radar-style graphical layout. The script includes  smooth sweep animation, target plotting, and distance mapping for real-time monitoring. The base visualization logic was AI-generated and further customized and adjusted according to the required COM port configuration and project functionality.
+
 
 
 ## Clock Configuration
